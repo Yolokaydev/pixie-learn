@@ -1,19 +1,26 @@
-import { Application, Sprite } from "pixi.js";
+import { Application } from "pixi.js";
+import { Scene } from "./scenes/Scene";
 
 const app = new Application<HTMLCanvasElement>({
   view: document.getElementById("pixi-canvas") as HTMLCanvasElement,
   resolution: window.devicePixelRatio || 1,
   autoDensity: true,
   backgroundColor: 0x6495ed,
-  width: 640,
-  height: 480,
+  width: window.innerWidth,
+  height: window.innerHeight,
 });
 
-const clampy: Sprite = Sprite.from("sprites/clampy.svg");
+const starterScene: Scene = new Scene(app.screen.width, app.screen.height);
+app.stage.addChild(starterScene);
 
-clampy.anchor.set(0.5);
+// Function to resize the canvas
+function resize() {
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+  starterScene.onResize(window.innerWidth, window.innerHeight);
+}
 
-clampy.x = app.screen.width / 2;
-clampy.y = app.screen.height / 2;
+// Listen for window resize events
+window.addEventListener("resize", resize);
 
-app.stage.addChild(clampy);
+// Initial resize to set up correct dimensions
+resize();
